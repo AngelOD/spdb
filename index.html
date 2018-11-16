@@ -24,6 +24,15 @@
   <body>
     <div class="reveal">
       <div class="slides">
+        <section>
+          <h2>Log-based Predictive Maintenance</h2>
+          <h4>by Ruben Sipos, Fabian Moerchen, Dmitriy Fradkin, Zhuang Wang</h4>
+          <h5>Presented by: Tristan Bendixen</h5>
+        </section>
+        <section>
+          \[\text{min}_w\frac{\lambda}{2}\left\lVert w\right\rVert_1^2+\sum\nolimits_j
+          \text{max}\left\{1-y_jw^Tx_j,0\right\}\]
+        </section>
         <section>Slide 1</section>
         <section>Slide 2</section>
       </div>
@@ -38,8 +47,10 @@
       // - https://github.com/hakimel/reveal.js#dependencies
       Reveal.initialize({
         dependencies: [
+          { src: 'lib/js/classList.js' },
           { src: 'plugin/markdown/marked.js' },
           { src: 'plugin/markdown/markdown.js' },
+          { src: 'plugin/math/math.js', async: true },
           { src: 'plugin/notes/notes.js', async: true },
           { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
           { src: 'node_modules/reveal.js-menu/menu.js' },
@@ -47,10 +58,16 @@
 
         controls: false,
         controlsTutorial: false,
-        slideNumber: 'c/t',
+        history: true,
+        math: {
+          config: 'TeX-AMS_HTML-full',
+        },
+        slideNumber: 'c',
         transition: 'none',
 
-        menu: {},
+        menu: {
+          keyboard: true,
+        },
       });
     </script>
   </body>
