@@ -24,17 +24,250 @@
   <body>
     <div class="reveal">
       <div class="slides">
-        <section>
+        <section data-timing="30">
           <h2>Log-based Predictive Maintenance</h2>
-          <h4>by Ruben Sipos, Fabian Moerchen, Dmitriy Fradkin, Zhuang Wang</h4>
+          <h4>
+            published in SIGKDD 2014<br>
+            Ruben Sipos, Fabian Moerchen, Dmitriy Fradkin, Zhuang Wang
+          </h4>
+          <br>
           <h5>Presented by: Tristan Bendixen</h5>
+
+          <aside class="notes">
+            <ul>
+              <li>
+                <strong>SIGKDD:</strong>
+                Special Interest Group on Knowledge Discovery and Data mining
+              </li>
+            </ul>
+          </aside>
         </section>
+
+        <section data-timing="45">
+          <h2>Agenda</h2>
+          <ul>
+            <li>Problem</li>
+            <li>Solution</li>
+            <li>Experiments</li>
+            <li>Conclusion</li>
+            <li>Evaluation</li>
+          </ul>
+        </section>
+
         <section>
+          <h2>The Problem</h2>
+          <ul>
+            <li>Medical equipment failures can be expensive, especially with downtime.</li>
+            <li>Maintenance cycles do not always work "well enough".</li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>Time between failure and maintenance is costly.</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Maintenance Flow</h2>
+          <ul>
+            <li>Systems are operating normally</li>
+            <li>Problem occurs during maintenance cycle</li>
+            <li>Technician is booked</li>
+            <li>Hardware is inspected to locate fault(s)</li>
+            <li>Components are replaced and reconfigured as needed</li>
+            <li>Systems are again operational</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Log Data</h2>
+          <ul>
+            <li>Almost all of this is logged!</li>
+            <li>Hardware is mostly software-operated</li>
+            <li>Software logs everything the developer found useful (at <em>least</em>)</li>
+            <li>Technicians log everything about their visits</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Their Goal</h2>
+          <p>
+            To predict failures and schedule maintenance proactively to limit the
+            amount of downtime, using the aforementioned log data
+          </p>
+
+          <aside class="notes">
+            <ul>
+              <li>Adding sensors to running hardware is too expensive.</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Requirements</h2>
+          <ul>
+            <li>Should predict within <em>predictive interval</em></li>
+            <li>Must not use data from <em>infected interval</em></li>
+            <li>
+              Model must be ...
+              <ul>
+                <li>flexible</li>
+                <li>interpretable</li>
+                <li>efficient</li>
+                <li>resilient to class imbalance</li>
+              </ul>
+            </li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>Worked with domain experts</li>
+              <li>Predictive Interval, Infected Interval, Responsive Duration</li>
+              <li>Flexible: Components/systems are different</li>
+              <li>Interpretable: Domain experts should verify</li>
+              <li>Efficient: There is a LOT of data and features</li>
+              <li>Resilient: Few failures compared to non-failures</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Methodology: MIL</h2>
+          <ul>
+            <li>Multi-Instance Learning</li>
+            <li>Instances grouped in labeled bags</li>
+            <li>Not all log entries will carry error markers, but some will</li>
+            <li>Task is to correctly label a bag, not individual instances</li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>Might group per hour, day or week</li>
+              <li>Bag with error marker will have instances with error markers</li>
+              <li>Bags without error markers won't have instances with error markers</li>
+              <li>Thus looking for patterns in a given interval as a whole</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Training</h2>
+          <ul>
+            <li>One bag = One week</li>
+            <li>Multiple examples from bags without incidents</li>
+            <li>Averaged meta-example from bag with incident(s)</li>
+            <li>L1-regularized SVM optimization problem with user-specified regularization parameter</li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>Limiting noise from data</li>
+              <li>Combating data imbalance and over-fitting</li>
+              <li>Finds the model's weights</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Prediction</h2>
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Available Features</h2>
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Feature Selection</h2>
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Experiments</h2>
+          <ul>
+            <li></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Conclusion</h2>
+        </section>
+
+        <section>
+          <h2>Evaluation - The Positive</h2>
+          <ul>
+            <li></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Evaluation - The Less Than Positive</h2>
+          <ul>
+            <li>A <strong>LOT</strong> of mistakes</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Evaluation - Relevance to Our Project</h2>
+          <ul>
+            <li></li>
+          </ul>
+        </section>
+
+        <!--<section>
           \[\text{min}_w\frac{\lambda}{2}\left\lVert w\right\rVert_1^2+\sum\nolimits_j
           \text{max}\left\{1-y_jw^Tx_j,0\right\}\]
-        </section>
-        <section>Slide 1</section>
-        <section>Slide 2</section>
+        </section>-->
       </div>
     </div>
 
@@ -58,6 +291,7 @@
 
         controls: false,
         controlsTutorial: false,
+        defaultTiming: 120,
         history: true,
         math: {
           config: 'TeX-AMS_HTML-full',
