@@ -24,7 +24,7 @@
   <body>
     <div class="reveal">
       <div class="slides">
-        <section data-timing="30">
+        <section data-timing="20">
           <h2>Log-based Predictive Maintenance</h2>
           <h4>
             published in SIGKDD 2014<br>
@@ -43,7 +43,7 @@
           </aside>
         </section>
 
-        <section data-timing="45">
+        <section data-timing="40">
           <h2>Agenda</h2>
           <ul>
             <li>Problem</li>
@@ -54,7 +54,7 @@
           </ul>
         </section>
 
-        <section>
+        <section data-timing="60">
           <h2>The Problem</h2>
           <ul>
             <li>Medical equipment failures can be expensive, especially with downtime.</li>
@@ -68,29 +68,37 @@
           </aside>
         </section>
 
-        <section>
-          <h2>Maintenance Flow</h2>
-          <ul>
-            <li>Systems are operating normally</li>
-            <li>Problem occurs during maintenance cycle</li>
-            <li>Technician is booked</li>
-            <li>Hardware is inspected to locate fault(s)</li>
-            <li>Components are replaced and reconfigured as needed</li>
-            <li>Systems are again operational</li>
-          </ul>
+        <section data-timing="90">
+          <h2>Maintenance Flow Analysis</h2>
+          <img src="img/oldworkflow.png" alt="Old workflow">
+          <aside class="notes">
+            <ul>
+              <li>Systems are operating normally</li>
+              <li>Problem occurs during maintenance cycle</li>
+              <li>Technician is booked</li>
+              <li>Hardware is inspected to locate fault(s)</li>
+              <li>Components are replaced and reconfigured as needed</li>
+              <li>Systems are again operational</li>
+            </ul>
+          </aside>
         </section>
 
-        <section>
+        <section data-timing="60">
           <h2>Log Data</h2>
           <ul>
-            <li>Almost all of this is logged!</li>
             <li>Hardware is mostly software-operated</li>
             <li>Software logs everything the developer found useful (at <em>least</em>)</li>
             <li>Technicians log everything about their visits</li>
           </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>Almost all of it is logged!</li>
+            </ul>
+          </aside>
         </section>
 
-        <section>
+        <section data-timing="60">
           <h2>Their Goal</h2>
           <p>
             To predict failures and schedule maintenance proactively to limit the
@@ -104,7 +112,7 @@
           </aside>
         </section>
 
-        <section>
+        <section data-timing="200">
           <h2>Requirements</h2>
           <ul>
             <li>Should predict within <em>predictive interval</em></li>
@@ -132,7 +140,7 @@
           </aside>
         </section>
 
-        <section>
+        <section data-timing="120">
           <h2>Methodology: MIL</h2>
           <ul>
             <li>Multi-Instance Learning</li>
@@ -151,10 +159,10 @@
           </aside>
         </section>
 
-        <section>
+        <section data-timing="120">
           <h2>Training</h2>
           <ul>
-            <li>One bag = One week</li>
+            <li>Bag size likely determined by predictive interval</li>
             <li>Multiple examples from bags without incidents</li>
             <li>Averaged meta-example from bag with incident(s)</li>
             <li>L1-regularized SVM optimization problem with user-specified regularization parameter</li>
@@ -162,6 +170,7 @@
 
           <aside class="notes">
             <ul>
+              <li>One instance = One day of logs</li>
               <li>Limiting noise from data</li>
               <li>Combating data imbalance and over-fitting</li>
               <li>Finds the model's weights</li>
@@ -169,105 +178,157 @@
           </aside>
         </section>
 
-        <section>
+        <section data-timing="120">
           <h2>Prediction</h2>
           <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
+            <li>Runs on a single instance</li>
+            <li>Checked against a threshold</li>
+            <li>Taken into account during testing</li>
           </ul>
 
           <aside class="notes">
             <ul>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
+              <li>Instance still = one day of logs</li>
+              <li>Testing: Runs against instances</li>
+              <li>If beyond threshold then mark bag</li>
             </ul>
           </aside>
         </section>
 
-        <section>
-          <h2>Available Features</h2>
-          <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-          </ul>
-
-          <aside class="notes">
-            <ul>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-            </ul>
-          </aside>
-        </section>
-
-        <section>
+        <section data-timing="120">
           <h2>Feature Selection</h2>
           <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
+            <li>Cherry-picked features from logs</li>
+            <li>Bootstrapped feature selection</li>
+            <li>Trains multiple models using all marked bags and a random subset of unmarked bags</li>
+            <li>Runs multiple times, calculating weights</li>
+            <li>Selects strongest features ranked by summed weights</li>
           </ul>
 
           <aside class="notes">
             <ul>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
+              <li>Important numerical values, event codes and event code text (parsed)</li>
+              <li>Avoids keywords (state space explosion)</li>
             </ul>
           </aside>
         </section>
 
-        <section>
+        <section data-timing="120">
           <h2>Experiments</h2>
           <ul>
-            <li></li>
+            <li>Two equipment models</li>
+            <li>Parameters decided with domain experts</li>
+            <li>Positive bags from -7 days to -1 day from known failures</li>
+            <li>Negative bags from ~20% of remaining, weekly intervals</li>
           </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>Several years of logs</li>
+              <li>Important components with sufficient failure counts</li>
+              <li>Predictive = 7, Infected = 20, Responsive Duration = 7</li>
+            </ul>
+          </aside>
         </section>
 
-        <section>
+        <section data-timing="60">
+          <h2>Experiment Datasets</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>C</th>
+                <th>A</th>
+                <th>Number of ...</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align: right;">16389</td>
+                <td style="text-align: right;">75552</td>
+                <td>instances</td>
+              </tr>
+              <tr>
+                <td style="text-align: right;">3073</td>
+                <td style="text-align: right;">11238</td>
+                <td>features</td>
+              </tr>
+              <tr>
+                <td style="text-align: right;">88</td>
+                <td style="text-align: right;">108</td>
+                <td>known failures</td>
+              </tr>
+              <tr>
+                <td style="text-align: right;">6664</td>
+                <td style="text-align: right;">14367</td>
+                <td>bags</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section data-timing="165">
+          <h2>Experiments Summary</h2>
+          <ul>
+            <li>Compared their algorithm to four others</li>
+            <li>Tested against multiple weight sum thresholds</li>
+            <li>300-400 features performed best</li>
+            <li>At 70% precision, 25% and 80% of failures in C and A were caught respectively</li>
+            <li>Smaller models are still interesting</li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>Outperformed all of them. <em>Lack of PM-AUC knowledge.</em></li>
+              <li>As low as 9 features. 300-400 features performed best.</li>
+              <li>Smaller models are fast and readable by domain experts.</li>
+              <li>Better root cause identification.</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section data-timing="150">
           <h2>Conclusion</h2>
+          <ul>
+            <li>Best on the market because no competitors exist(ed)</li>
+            <li>Better solution than other possible methods</li>
+            <li>Deployed by major medical equipment provider</li>
+          </ul>
+          <img src="img/workflow.png" alt="Workflow">
+        </section>
+
+        <section data-timing="150">
+          <h2>Evaluation</h2>
+          <p>The good</p>
+          <ul>
+            <li>Interesting approach to the issue</li>
+            <li>Led me to other interesting articles</li>
+          </ul>
+
+          <p>The not-so-good</p>
+          <ul>
+            <li>No examples and many knowledge assumptions</li>
+            <li>A <strong>LOT</strong> of typos</li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>A lot I didn't fully understand</li>
+              <li>One expression gave me a headache</li>
+              <li>Spelling mistakes. Repeated words.</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section data-timing="150">
+          <h2>Relevance to Our Project</h2>
+          <p>We are working with logs and fault detection.</p>
+          <p>Interesting approach that should probably be explored in depth.</p>
+          <p>Have tried something akin to it, but not exactly this.</p>
         </section>
 
         <section>
-          <h2>Evaluation - The Positive</h2>
-          <ul>
-            <li></li>
-          </ul>
+          <h1>The End</h1>
         </section>
-
-        <section>
-          <h2>Evaluation - The Less Than Positive</h2>
-          <ul>
-            <li>A <strong>LOT</strong> of mistakes</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Evaluation - Relevance to Our Project</h2>
-          <ul>
-            <li></li>
-          </ul>
-        </section>
-
-        <!--<section>
-          \[\text{min}_w\frac{\lambda}{2}\left\lVert w\right\rVert_1^2+\sum\nolimits_j
-          \text{max}\left\{1-y_jw^Tx_j,0\right\}\]
-        </section>-->
       </div>
     </div>
 
